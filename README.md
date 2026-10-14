@@ -274,6 +274,12 @@ The directory normally contains result/container JSON files and any attachments.
 mvn allure:report
 ```
 
+If Maven cannot resolve the `allure` prefix, use the fully qualified plugin command:
+
+```bash
+mvn io.qameta.allure:allure-maven:2.15.0:report
+```
+
 The report is typically generated at:
 
 ```text
@@ -287,6 +293,14 @@ Open the generated `index.html` in a browser.
 ```bash
 mvn allure:serve
 ```
+
+If Maven cannot resolve the `allure` plugin prefix (for example, it reports that the prefix cannot be found), invoke the plugin using its fully qualified coordinates instead:
+
+```bash
+mvn io.qameta.allure:allure-maven:2.15.0:serve
+```
+
+The fully qualified form tells Maven exactly which plugin and version to run, so it does not need to resolve the short `allure` prefix. The plugin must still be downloadable from your configured Maven repositories.
 
 This goal generates a report from the available results and starts a local server, usually opening the report in your default browser. Stop the server with `Ctrl+C`.
 
@@ -370,8 +384,11 @@ Call `AllureAttachments.attachScreenshot(driver, "Failure screenshot")` from the
 # Run tests and produce raw Allure results
 mvn clean test
 
-# Generate and open the report locally
+# Generate and open the report locally (plugin prefix)
 mvn allure:serve
+
+# Alternative: fully qualified plugin coordinates
+mvn io.qameta.allure:allure-maven:2.15.0:serve
 ```
 
 For CI/CD, archive `target/allure-results/` as a build artifact and generate/publish the HTML report in a later pipeline step. Preserve previous result data if you want trend charts across builds.
