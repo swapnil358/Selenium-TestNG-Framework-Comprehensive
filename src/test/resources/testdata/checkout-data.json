@@ -1,0 +1,7 @@
+{
+  "standardCustomer": {
+    "firstName": "Test",
+    "lastName": "User",
+    "postalCode": "12345"
+  }
+}

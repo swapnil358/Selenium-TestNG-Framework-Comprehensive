@@ -1,0 +1,8 @@
+target/
+logs/
+screenshots/
+test-output/
+.idea/
+.vscode/
+*.iml
+.env

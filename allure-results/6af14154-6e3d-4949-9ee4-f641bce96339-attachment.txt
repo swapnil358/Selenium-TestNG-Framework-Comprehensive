@@ -1,0 +1,5 @@
+Method: POST
+URI: https://jsonplaceholder.typicode.com/posts
+Headers: Accept=*/*
+Content-Type=application/json
+Body: {"username":"testuser123","password":"TestPassword123!"}

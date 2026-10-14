@@ -1,0 +1,29 @@
+Status Code: 201
+Headers: Date=Wed, 14 Oct 2026 15:30:13 GMT
+Content-Type=application/json; charset=utf-8
+Content-Length=78
+Connection=keep-alive
+access-control-allow-credentials=true
+access-control-expose-headers=Location
+Cache-Control=no-cache
+etag=W/"4e-0XnhODbQD0g7Io1kXFv6qf4ze0o"
+expires=-1
+location=https://jsonplaceholder.typicode.com/posts/101
+pragma=no-cache
+vary=Origin, X-HTTP-Method-Override, Accept-Encoding
+x-content-type-options=nosniff
+x-powered-by=Express
+x-ratelimit-limit=3600000
+x-ratelimit-remaining=3599992
+x-ratelimit-reset=1791992995
+cf-cache-status=DYNAMIC
+Report-To={"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=Q1wedD1sIFVzp7rnDp0178V3iuTGcKUaq0AVHOuEKKSGyS84D%2Bbp2kSDZvP8Me4xRvolrcdE2Q%2FXM3apZMX6VRs9%2F%2FlKt1LpKM2VasSJWACFUMVIsRriq%2FVAh%2BuYg8dSVI9Yj4FZUrzqYUBVQb5D"}]}
+Nel={"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Server=cloudflare
+CF-RAY=a4a79fc13fe137a8-MRS
+alt-svc=h3=":443"; ma=86400
+Body: {
+    "username": "testuser123",
+    "password": "TestPassword123!",
+    "id": 101
+}
