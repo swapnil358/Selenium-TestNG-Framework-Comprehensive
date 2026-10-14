@@ -16,8 +16,7 @@ import java.io.IOException;
 
 public class TestListener implements ITestListener {
 
-    private static final Logger log =
-            LogManager.getLogger(TestListener.class);
+    private static final Logger log = LogManager.getLogger(TestListener.class);
 
     @Override
     public void onTestStart(ITestResult result) {
@@ -40,8 +39,7 @@ public class TestListener implements ITestListener {
 
     @Override
     public void onTestFailure(ITestResult result) {
-        log.error("TEST FAIL: {}", result.getName(),
-                result.getThrowable());
+        log.error("TEST FAIL: {}", result.getName(), result.getThrowable());
 
         if (result.getThrowable() != null) {
             Allure.addAttachment(
@@ -53,8 +51,7 @@ public class TestListener implements ITestListener {
 
         try {
             if (DriverManager.peekDriver() != null) {
-                String screenshotPath =
-                        String.valueOf(ScreenshotUtils.capture(result.getName()));
+                String screenshotPath = String.valueOf(ScreenshotUtils.capture(result.getName()));
 
                 log.info("Screenshot saved: {}", screenshotPath);
 
