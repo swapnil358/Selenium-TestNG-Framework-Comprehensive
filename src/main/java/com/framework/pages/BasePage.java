@@ -3,6 +3,7 @@ package com.framework.pages;
 import com.framework.config.ConfigReader;
 import com.framework.driver.DriverManager;
 import com.framework.utils.webDriverWait;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -26,7 +27,9 @@ public abstract class BasePage {
         visible.sendKeys(value);
     }
 
-    protected String text(WebElement element) {
-        return wait.until(ExpectedConditions.visibilityOf(element)).getText();
+    protected String text(By element) {
+        String text = wait.until(ExpectedConditions.visibilityOfElementLocated(element)).getText();
+        System.out.println("Element text: " + text);
+        return text;
     }
 }
