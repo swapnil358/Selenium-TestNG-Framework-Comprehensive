@@ -1,0 +1,150 @@
+name: Java Selenium TestNG Tests with Report on git hub page
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: Select test environment
+        required: true
+        type: choice
+        options:
+          - qa
+          - staging
+        default: qa
+      browser:
+        description: Select browser
+        required: true
+        type: choice
+        options:
+          - chrome
+          - firefox
+          - edge
+        default: chrome
+      headless:
+        description: Run browser in headless mode
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  validate-environment:
+    name: Validate Java and Maven
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Show Java and Maven versions
+        run: |
+          java -version
+          mvn -version
+
+  selenium-tests:
+    name: Run Selenium TestNG tests
+    runs-on: ubuntu-latest
+    needs: validate-environment
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Run Selenium TestNG tests
+        run: >
+          mvn clean test
+          -Denv=${{ inputs.env }}
+          -Dbrowser=${{ inputs.browser }}
+          -Dheadless=${{ inputs.headless }}
+
+      - name: Upload test results and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenium-test-results
+          if-no-files-found: warn
+          path: |
+            target/surefire-reports/**
+            target/allure-results/**
+            target/screenshots/**
+            target/logs/**
+
+  generate-allure-report:
+    name: Generate Allure HTML report
+    runs-on: ubuntu-latest
+    needs: selenium-tests
+    if: always() && needs.selenium-tests.result != 'cancelled'
+    outputs:
+      report_exists: ${{ steps.generate.outputs.report_exists }}
+    steps:
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          name: selenium-test-results
+          path: test-results
+          if-no-artifact-found: warn
+
+      - name: Set up Java 21 for Allure
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Install Allure command-line
+        run: npm install --global allure-commandline
+
+      - name: Generate Allure HTML report
+        id: generate
+        shell: bash
+        run: |
+          if [ -d "test-results/allure-results" ] && find test-results/allure-results -type f -print -quit | grep -q .; then
+            allure generate test-results/allure-results --clean --output allure-report
+            echo "report_exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No Allure result files found in test-results/allure-results."
+            echo "Check that the TestNG Allure adapter is configured and writes results to target/allure-results."
+            echo "report_exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload Allure HTML as workflow artifact
+        if: steps.generate.outputs.report_exists == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-html-report
+          path: allure-report/
+
+      - name: Prepare report for GitHub Pages
+        if: steps.generate.outputs.report_exists == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: allure-report/
+
+  publish-allure-report:
+    name: Publish Allure report to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: generate-allure-report
+    if: needs.generate-allure-report.outputs.report_exists == 'true'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
