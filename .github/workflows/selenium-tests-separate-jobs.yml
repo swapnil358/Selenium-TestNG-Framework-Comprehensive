@@ -1,0 +1,99 @@
+name: Java Selenium TestNG Tests Separate Jobs
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: Select test environment
+        required: true
+        type: choice
+        options:
+          - qa
+          - staging
+        default: qa
+      browser:
+        description: Select browser
+        required: true
+        type: choice
+        options:
+          - chrome
+          - firefox
+          - edge
+        default: chrome
+      headless:
+        description: Run browser in headless mode
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  validate-environment:
+    name: Validate Java and Maven
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Show Java and Maven versions
+        run: |
+          java -version
+          mvn -version
+
+  selenium-tests:
+    name: Run Selenium TestNG tests
+    runs-on: ubuntu-latest
+    needs: validate-environment
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Run Selenium TestNG tests
+        run: >
+          mvn clean test
+          -Denv=${{ inputs.env }}
+          -Dbrowser=${{ inputs.browser }}
+          -Dheadless=${{ inputs.headless }}
+
+      - name: Upload test reports and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenium-test-results
+          if-no-files-found: warn
+          path: |
+            target/surefire-reports/**
+            target/allure-results/**
+            target/screenshots/**
+            target/logs/**
+
+  publish-reports:
+    name: Collect test reports
+    runs-on: ubuntu-latest
+    needs: selenium-tests
+    if: always() && needs.selenium-tests.result != 'cancelled'
+    steps:
+      - name: Download test reports
+        uses: actions/download-artifact@v4
+        with:
+          name: selenium-test-results
+          path: test-results
+
+      - name: Show downloaded report files
+        run: |
+          echo "Downloaded test artifacts:"
+          find test-results -type f -print || true
