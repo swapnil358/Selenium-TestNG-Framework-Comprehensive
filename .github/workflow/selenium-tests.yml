@@ -1,4 +1,5 @@
 name: Java Selenium TestNG Tests
+# Selenium TestNG CI workflow
 
 on:
   push:
