@@ -11,7 +11,7 @@ public class SearchTest extends BaseTest {
     public void inventoryProductsShouldBeVisibleAfterLogin() {
         new LoginPage()
                 .open()
-                .login("standard_user", "secret_sauce");
+                .login("anshika123@gmail.com", "Qwerty@12345");
 
         Assert.assertTrue(new HomePage().getProductCount() > 0);
     }

@@ -9,6 +9,6 @@ public class HeaderComponent {
     private final By title = By.cssSelector(".title");
 
     public String getPageTitle() {
-        return driver.findElement(title).getText();
+        return driver.getTitle();
     }
 }

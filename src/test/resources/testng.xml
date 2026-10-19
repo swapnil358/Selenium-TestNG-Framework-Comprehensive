@@ -5,11 +5,11 @@
     </listeners>
     <test name="Smoke and Regression">
         <classes>
-            <class name="com.tests.smoke.LoginTest"/>
+<!--            <class name="com.tests.smoke.LoginTest"/>-->
 <!--            <class name="com.tests.smoke.SearchTest"/>-->
 <!--            <class name="com.tests.regression.CheckoutTest"/>-->
 <!--            <class name="com.tests.regression.PaymentTest"/>-->
-<!--            <class name="com.tests.api.ApiHealthTest"/>-->
+            <class name="com.tests.api.ApiHealthTest"/>
         </classes>
     </test>
 </suite>

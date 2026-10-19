@@ -1,6 +1,7 @@
 package com.framework.pages;
 
 import com.framework.config.ConfigReader;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -12,14 +13,16 @@ public class LoginPage extends BasePage {
     private static final Logger logger = LogManager.getLogger(LoginPage.class);
 
 
-    @FindBy(id = "user-name")
+    @FindBy(id = "userEmail")
     private WebElement username;
-    @FindBy(id = "password")
+    @FindBy(id = "userPassword")
     private WebElement password;
-    @FindBy(id = "login-button")
+    @FindBy(id = "login")
     private WebElement loginButton;
-    @FindBy(css = "[data-test='error']")
+    @FindBy(xpath = "//div[@role='alert']")
     private WebElement errorMessage;
+
+    By ByErrorMessage = By.xpath("//div[@role='alert']");
 
     public LoginPage() {
         super();
@@ -40,6 +43,6 @@ public class LoginPage extends BasePage {
     }
 
     public String getErrorMessage() {
-        return text(errorMessage);
+        return text(ByErrorMessage);
     }
 }

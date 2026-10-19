@@ -14,6 +14,7 @@
         <env>qa</env>
         <browser>chrome</browser>
         <headless>false</headless>
+        <threadCount>2</threadCount>
         <allure.version>2.29.1</allure.version>
     </properties>
     <dependencies>
@@ -93,6 +94,7 @@
                         <env>${env}</env>
                         <browser>${browser}</browser>
                         <headless>${headless}</headless>
+                        <threadCount>${threadCount}</threadCount>
                     </systemPropertyVariables>
                     <trimStackTrace>false</trimStackTrace>
                 </configuration>

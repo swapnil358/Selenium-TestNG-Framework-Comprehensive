@@ -9,17 +9,17 @@ import org.testng.annotations.Test;
 public class LoginTest extends BaseTest {
     @Test(groups = {"smoke", "regression"}, description = "Valid user can sign in")
     public void validLoginShouldOpenHomePage() {
-        new LoginPage().open().login("standard_user", "secret_sauce");
+        new LoginPage().open().login("swap@yopmail.com", "Qwerty@12345");
         HomePage home = new HomePage();
         Assert.assertTrue(home.isLoaded(), "Inventory should be visible");
-        Assert.assertEquals(home.getHeading(), "Products");
-        Assert.assertEquals(home.getProductCount(), 6, "Product count should be 6");
+        Assert.assertEquals(home.getHeading(), "Let's Shop");
+        Assert.assertEquals(home.getProductCount(), 3, "Product count should be 6");
     }
 
     @Test(groups = {"regression"}, description = "Invalid password displays an error")
     public void invalidPasswordShouldShowError() {
         LoginPage page = new LoginPage().open();
-        page.login("standard_user", "invalid_password");
-        Assert.assertTrue(page.getErrorMessage().contains("Username and password do not match"));
+        page.login("swap@yopmail.com", "Qwerty@123455");
+        Assert.assertTrue(page.getErrorMessage().contains("Incorrect email or password."));
     }
 }

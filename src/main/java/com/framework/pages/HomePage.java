@@ -10,8 +10,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.List;
 
 public class HomePage extends BasePage {
-    @FindBy(css = ".inventory_item")
+    @FindBy(xpath = "//*[@class='card-body']")
     private List<WebElement> inventoryItems;
+    By ByInventoryItems = By.xpath("//*[@class='card-body']");
     private final HeaderComponent header;
 
     public HomePage() {
@@ -30,6 +31,6 @@ public class HomePage extends BasePage {
     }
 
     public boolean isLoaded() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".inventory_list"))).isDisplayed();
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(ByInventoryItems)).isDisplayed();
     }
 }
